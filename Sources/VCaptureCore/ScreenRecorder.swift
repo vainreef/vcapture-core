@@ -65,12 +65,17 @@ public final class ScreenRecorder: NSObject, SCStreamOutput, @unchecked Sendable
         self.config = config
         self.outputURL = outputURL
         self.targetFPS = config.frameRate.rawValue
-        let bundleDiagURL = diagnosticsURL ?? outputURL.deletingLastPathComponent().appendingPathComponent("diagnostics.txt")
-        self.diagnostics = RecordingDiagnostics(targetFPS: config.frameRate.rawValue, bundleDiagnosticsURL: bundleDiagURL)
-        let tURL = timelineURL ?? outputURL.deletingLastPathComponent().appendingPathComponent("frames_timeline.csv")
-        self.timelineLogger = TimelineLogger(fileURL: tURL, targetFPS: config.frameRate.rawValue)
-        let sURL = sourceStreamURL ?? outputURL.deletingLastPathComponent().appendingPathComponent("source_stream.csv")
-        self.sourceTracker = SourceStreamTracker(outputURL: sURL)
+        self.diagnostics = RecordingDiagnostics(targetFPS: config.frameRate.rawValue, bundleDiagnosticsURL: diagnosticsURL)
+        if let tURL = timelineURL {
+            self.timelineLogger = TimelineLogger(fileURL: tURL, targetFPS: config.frameRate.rawValue)
+        } else {
+            self.timelineLogger = nil
+        }
+        if let sURL = sourceStreamURL {
+            self.sourceTracker = SourceStreamTracker(outputURL: sURL)
+        } else {
+            self.sourceTracker = nil
+        }
         super.init()
     }
 
