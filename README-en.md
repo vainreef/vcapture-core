@@ -2,9 +2,28 @@
 
 [English Version](README-en.md) | [中文说明](README.md) | [Engineering Whitepaper (EN)](ENGINEERING-DEEP-DIVE-en.md) | [深度工程白皮书 (中文)](ENGINEERING-DEEP-DIVE-zh.md)
 
-**VCaptureCore** is an industrial-grade, high-performance native screen recording audio/video pipeline library designed specifically for macOS (Apple Silicon architecture).
+---
 
-It fundamentally solves the low-level stutter, hardware backpressure resonance, audio-video desynchronization, and cross-track multiplexer deadlocks encountered when using native `ScreenCaptureKit` + `AVAssetWriter` under extreme **4K UHD (3840×2160) @ 180Hz ProMotion gaming display** workloads.
+### 💡 What is this? What exact problems does it solve? (In Plain English)
+
+If you are developing a screen recorder for macOS and using Apple's official **ScreenCaptureKit** and **AVAssetWriter**, you will **inevitably** run into these exact infuriating, real-world issues:
+
+1. **Stutter & frame drops on high-refresh screens**: On 120Hz / 144Hz / 180Hz displays (like MacBook Pro built-in ProMotion or external gaming monitors), dragging windows or rapidly scrolling makes the recorded video stutter, drop frames, or freeze for a fraction of a second every few moments;
+2. **Audio and video getting more and more out of sync**: As recording progresses, sound and picture drift apart—eventually resulting in video racing ahead of audio by seconds, or audio leading video;
+3. **Recorder freezing or corrupting files**: Clicking stop hangs for 10~15 seconds, or periods of system silence followed by sudden audio cause the asset writer to crash, leaving behind a useless 68-byte broken file;
+4. **Washed-out, greyish colors**: Recorded 4K videos have grey blacks and collapsed contrast, looking noticeably duller than the real screen;
+5. **Hardware encoder error storms**: Logs flood with `isReadyForMoreMediaData == false` backpressure warnings, dropping dozens of frames per second.
+
+👉 **This repository shares the exact core logic that permanently fixes all of these issues.**  
+It enables you to record native **4K UHD @ 180Hz with violent window drags and fast scrolls** while producing **strictly constant 60 FPS, millisecond-accurate A/V sync, 100% native color fidelity, zero stutter, and zero dropped frames**.
+
+---
+
+### 🤖 How to use it? Just hand it to your AI Agent!
+
+**You don't need to manually struggle through complicated low-level multimedia details:**  
+Simply `git clone` this repository, and **point your daily AI Coding Agent (Cursor / Claude Code / Antigravity / Windsurf, etc.) directly at this repo folder. Tell the AI Agent to read and analyze the code and whitepapers here.**  
+The AI Agent will immediately understand the decoupled producer-consumer architecture, anti-jitter ring buffer, single-tick pacing, and dual-track lockstep synchronization, and seamlessly transplant this battle-tested pipeline into your own project!
 
 ---
 
